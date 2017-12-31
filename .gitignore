@@ -2,3 +2,6 @@
 *.synctex
 *.txt
 *.out
+*.gz
+*.log
+*.blg
