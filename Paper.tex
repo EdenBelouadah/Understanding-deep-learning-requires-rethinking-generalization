@@ -1,0 +1,168 @@
+%\documentclass[a4paper,english,12pt,twocolumn]{article}
+\documentclass[a4paper,english,12pt, twocolumn]{article}
+\usepackage[utf8]{inputenc} % Encodage du fichier
+\usepackage[T1]{fontenc} % Encodage des fonts nécessaire pour le Latin
+\usepackage[french]{babel} % Pour changer la langue des mots générés et choisir la bonne mise en page
+\usepackage{amssymb}
+\usepackage{pdflscape}
+\usepackage{microtype} 
+\usepackage{lmodern} % Le latin modèrne
+\usepackage[top=1.5cm, bottom=1.5cm, left=2.5cm, right=1.5cm]{geometry} % Définir les marges de la page 
+\usepackage[hidelinks,urlcolor=blue,unicode=true,
+pdftitle={Understanding Deep Learning requires rethinking generalization},
+pdfauthor={BELOUADAH Eden and BOUHAHA Mariem},
+pdfdisplaydoctitle=true]{hyperref} % Pour les liens 
+\usepackage{fancyhdr} % Pour le style de la page
+\usepackage[font=it]{caption} % Rendre les titres des tableaux italiques
+\usepackage{graphicx} % Pour les images
+\usepackage{subcaption} % Pour mettre plusieurs images sur la même ligne
+\usepackage{float} % Pour empêcher le déplacement des tableaux et des figures.
+\usepackage{babelbib} % Pour changer la langue dans la bibliographie
+\usepackage{amsmath} % Pour des fonctions mathématiques
+\usepackage{amssymb} % Pour les symboles mathématiques
+%\usepackage[onelanguage,english,longend,boxruled,algoruled,linesnumbered,algochapter,nofillcomment]{algorithm2e} %pour les algorithmes
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{setspace}
+
+\graphicspath{ {photos/} } % Spécifier le répertoire contenant les images
+
+\DisableLigatures[f]{encoding=*}
+
+%Active ça si tu ne veux pas les points-virgules dans les algorithmes
+% \DontPrintSemicolon
+ 
+%\renewcommand \thechapter{\Roman{chapter}} % Utiliser les numéros romans pour les chapitres
+
+\captionsetup{labelfont=it,textfont=it,labelsep=period} % Changer le style des légendes
+\AtBeginDocument{ % Changer les légendes
+	\renewcommand\tablename{\itshape Tableau}
+	\renewcommand{\figurename}{\itshape Figure}
+	% Renommer la table des matières
+	\renewcommand{\contentsname}{Sommaire}
+}
+
+% Style de l'entête et le pied de la page
+\setlength{\headheight}{-60pt}
+\pagestyle{fancy}
+\fancyhead[L]{} % Enlever la section
+\fancyhead[R]{\footnotesize\slshape{\nouppercase{\leftmark}}} % Titre du chapitre en minuscule avec taille 10
+\fancyfoot[C]{}
+\fancyfoot[R]{\thepage} % Déplacer le numéro de la page vers la droite de la page
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0pt}
+\fancyhf{}
+\fancyfoot[R]{\thepage}
+}
+  
+% Espace entre les lignes
+\linespread{1.3}
+
+% Code pris de https://tex.stackexchange.com/a/95616/109916 et corrigé
+% Début
+\makeatletter
+\newcommand{\emptypage}[1]{
+  \cleardoublepage
+  \begingroup
+  \let\ps@plain\ps@empty
+  \pagestyle{empty}
+  #1
+  \cleardoublepage
+  \endgroup}
+\makeatletter
+% Fin
+
+
+% pour changer les deux points des légendes d'algorithmes
+% \SetAlgoCaptionSeparator{\unskip.}
+
+\begin{document}
+%\include{Page_de_garde}
+%\include{Remerciements}
+\emptypage{
+%\tableofcontents
+%\listoffigures
+%\listoftables
+}
+    
+\setlength{\parskip}{0.6em plus 0.1em minus 0.1em}
+%\SetKwInput{KwOut}{Outpits}
+
+% Redéfinition des chapitres et sections pour les inclure dans le sommaire
+\makeatletter
+%	\let\oldchapter\chapter
+%	\newcommand{\@chapterstar}[1]{\cleardoublepage\phantomsection\addcontentsline{toc}{chapter}{#1}{\oldchapter*{#1}}\markboth{#1}{}}
+%	\newcommand{\@chapternostar}[1]{{\oldchapter{#1}}}
+%	\renewcommand{\chapter}{\@ifstar{\@chapterstar}{\@chapternostar}}
+\let\oldsection\section
+\newcommand{\@sectionstar}[1]{\phantomsection\addcontentsline{toc}{section}{#1}{\oldsection*{#1}}}
+\newcommand{\@sectionnostar}[1]{{\oldsection{#1}}}
+\renewcommand\section{\@ifstar{\@sectionstar}{\@sectionnostar}}	
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+
+\setcounter{page}{1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{\Large Understanding Deep Learning requires rethinking generalization}
+\author{\normalsize Eden BELOUADAH \and \normalsize Mariem BOUHAHA}
+\date{}
+\maketitle
+
+\section{Introduction}
+Ce court rapport est une simple analyse de ce qui a été présenté par Chiyuan Zhang, Samy Bengio, Moritz Hardt, Benjamin Recht et Oriol Vinyals dans l'article: Understanding Deep Learning requires rethinking generalization [1].
+\section{Contributions}
+A travers plusieurs expérimentations, les auteurs montrent que les approches traditionnelles échouent dans l'explication du phénomène que les réseaux de neurones larges généralisent bien en pratique. Par ailleurs, les expérimentations prouvent que l'état de l'art des réseaux de neurones convolutionnels pour la classification d'images qui ont été entraînés avec des méthodes de descente de gradient stochastique arrivent à apprendre facilement un étiquetage aléatoire des exemples d'apprentissage.
+
+Ce phénomène n'est pas affecté par la régularisation et apparait même si on applique sur les images originales un bruit complètement aléatoire et non structuré.
+
+De plus, les auteurs montrent que deux réseaux de neurones à simple profondeur arrivent à avoir une expressivité finie d'échantillons une fois le nombre de paramètres dépasse le nombre d'exemples, c'est ce qui se passe dans la pratique.  
+
+Les réseaux de neurones profond ont généralement un nombre de paramètres plus grand que le nombre d'exemples.
+
+La contribution des auteurs est dans les tests qu'ils ont fait:
+
+\subsection{Tests de randomisation}
+
+Les auteurs ont entraîné plusieurs architectures de réseaux de neurones sur une copie des données où les étiquettes des classes ont été remplacées par des étiquettes aléatoires. L'erreur obtenue sur l'ensemble d'apprentissage était nulle, et l'erreur sur l'ensemble de test était un peu aléatoire vu qu'il n'y a pas de corrélation entre les étiquettes des deux ensembles. Les conclusions tirées de cette expérience sont:
+\begin{itemize}
+	\item La capacité d'un réseau de neurone est suffisante pour mémoriser toutes les données,
+	\item les réseaux de neurones profonds apprennent facilement les étiquettes aléatoires, et
+	\item la randomisation des étiquettes est considérée comme une sorte de transformation appliquée sur les données sauf que tous les autres paramètres du problème restent les mêmes.
+\end{itemize}
+\subsection{Le rôle de la régularisation explicite}
+Ici, les auteurs montrent que la régularisation explicite en utilisant par exemple le dropout et le weight-decay peut améliorer les performances de généralisation mais elle n'est pas nécessaire ni suffisante pour contrôler l'erreur de généralisation. De plus, la régularisation dans les réseaux de neurones profonds joue beaucoup plus le rôle de l'optimisation de la dernière erreur sur l'ensemble de test du modèle.	
+
+
+\subsection{Expressivité d'un échantillon fini}
+Il  a été montré aussi que l'utilisation d'un réseau de neurones avec deux couches cachées et la fonction d'activation ReLU avec $p=2n+d$ paramètres peut apprendre n'importe quel échantillon de taille $n$ en $d$ dimensions.
+
+\subsection{Rôle d'une régularisation implicite}
+Un modèle qui peut bien apprendre les données d'apprentissage n'est pas forcément capable de bien généraliser. Les auteurs montrent que même les méthodes basées sur la fonction gaussienne noyau peuvent bien généraliser sans régularisation sur les petits ensembles. Toutefois, cela n'explique pas pourquoi certaines architectures généralisent mieux que d'autres.
+
+\section{Travaux connexes}
+Plusieurs travaux ont été fait dans le passé pour étudier l'expressivité d'un réseau de neurones et parmi les conclusions marquantes on cite:
+\begin{itemize}
+	\item La stabilité d'un algorithme d'apprentissage est indépendante de l'étiquetage de l'ensemble d'apprentissage.
+	\item Même les perceptrons de deux couches cachées seulement ont une expressivité universelle sur les échantillons de taille finie.
+	\item La taille d'un réseau de neurone n'est pas l'acteur principal de son contrôle de capacité.
+\end{itemize}
+
+\section{Expérimentations}
+Tous les tests ont été faits sur les deux bases de données $CIFAR\_10$ et $ImageNet$.
+
+\section{Conclusion}
+Les expérimentations présentées dans cet article mettent l'accent sur l'importance de comprendre la notion de capacité effective des modèles de réseaux de neurones, qui sont facilement capable de mémoriser tout l'ensemble d'apprentissage. Pour résumer, les raisons pour lesquelles l'optimisation est empiriquement facile doivent être différentes de la vraie cause de généralisation. C'est pour cela qu'il est nécessaire de comprendre les vraies notions qui se cachent derrière la généralisation pour pouvoir bien comprendre l'apprentissage profond.
+
+\section*{Références}
+[1] Zhang, C., Bengio, S., Hardt, M., Recht, B. and Vinyals, O., 2016. Understanding deep learning requires rethinking generalization. arXiv preprint arXiv:1611.03530.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\bibliographystyle{babplain}
+%\parskip=-1em
+%\emptypage{\bibliography{bibliographie}}
+%\let\section\oldsection % pour éviter que le résumé soient visibles dans le sommaire comme une section
+%\include{Resume}
+\end{document}
