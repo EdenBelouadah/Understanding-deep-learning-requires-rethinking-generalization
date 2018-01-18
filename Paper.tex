@@ -106,57 +106,55 @@ pdfdisplaydoctitle=true]{hyperref} % Pour les liens
 \setcounter{page}{1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{\Large Understanding Deep Learning requires rethinking generalization}
+\title{\Large Understanding Deep Learning Requires Rethinking Generalization \\Présentation et analyse}
 \author{\normalsize Eden BELOUADAH \and \normalsize Mariem BOUHAHA}
 \date{}
 \maketitle
-
 \section{Introduction}
-Ce court rapport est une simple analyse de ce qui a été présenté par Chiyuan Zhang, Samy Bengio, Moritz Hardt, Benjamin Recht et Oriol Vinyals dans l'article: Understanding Deep Learning requires rethinking generalization [1].
+L'article \emph{Understanding Deep Learning Requires Rethinking Generalization} a été publié en Novembre 2016 dans arXiv par Chiyuan Zhang (MIT), Samy Bengio (Google Brain), Moritz Hardt (Google Brain), Benjamin Recht (UC) et Oriol Vinyals (DeepMind). Dans cet article, les auteurs répondent à la question suivante:
+
+\textit{Par quoi expliquer la bonne généralisation des Réseaux de Neurones en pratique? }
+
+Selon les auteurs, répondre à cette question va permettre de rendre les réseaux de neurones plus interprétables et aboutir à un design plus fiable de l’architecture du modèle. 
+
 \section{Contributions}
-A travers plusieurs expérimentations, les auteurs montrent que les approches traditionnelles échouent dans l'explication du phénomène que les réseaux de neurones larges généralisent bien en pratique. Par ailleurs, les expérimentations prouvent que l'état de l'art des réseaux de neurones convolutionnels pour la classification d'images qui ont été entraînés avec des méthodes de descente de gradient stochastique arrivent à apprendre facilement un étiquetage aléatoire des exemples d'apprentissage.
-
-Ce phénomène n'est pas affecté par la régularisation et apparait même si on applique sur les images originales un bruit complètement aléatoire et non structuré.
-
-De plus, les auteurs montrent que deux réseaux de neurones à simple profondeur arrivent à avoir une expressivité finie d'échantillons une fois le nombre de paramètres dépasse le nombre d'exemples, c'est ce qui se passe dans la pratique.  
-
-Les réseaux de neurones profond ont généralement un nombre de paramètres plus grand que le nombre d'exemples.
-
-La contribution des auteurs est dans les tests qu'ils ont fait:
-
-\subsection{Tests de randomisation}
-
-Les auteurs ont entraîné plusieurs architectures de réseaux de neurones sur une copie des données où les étiquettes des classes ont été remplacées par des étiquettes aléatoires. L'erreur obtenue sur l'ensemble d'apprentissage était nulle, et l'erreur sur l'ensemble de test était un peu aléatoire vu qu'il n'y a pas de corrélation entre les étiquettes des deux ensembles. Les conclusions tirées de cette expérience sont:
+A travers plusieurs expérimentations, les auteurs montraient comment les approches traditionnelles échouent dans l’explication du phénomène que les réseaux de neurones généralisent bien en pratique. Par “généraliser bien” les auteurs voulaient simplement dire “Qu’est-ce qui cause un réseau de neurones qui performe bien sur les données d’apprentissage à performer aussi bien sur les données de test ? » 
+En expérimentant sur les data sets CIFAR 10 (50.000 images d’apprentissage, 10.000 images de validation, 10 classes) et ImageNet (1.281.167 000 images d’apprentissage, 50,000 images de validation, 1000 classes) et en se basant sur l’architecture Inception V3 et une de ses versions (AlexNet) ainsi qu'en utilisant des MLPs, les auteurs trouvaient que :
 \begin{itemize}
-	\item La capacité d'un réseau de neurone est suffisante pour mémoriser toutes les données,
-	\item les réseaux de neurones profonds apprennent facilement les étiquettes aléatoires, et
-	\item la randomisation des étiquettes est considérée comme une sorte de transformation appliquée sur les données sauf que tous les autres paramètres du problème restent les mêmes.
-\end{itemize}
-\subsection{Le rôle de la régularisation explicite}
-Ici, les auteurs montrent que la régularisation explicite en utilisant par exemple le dropout et le weight-decay peut améliorer les performances de généralisation mais elle n'est pas nécessaire ni suffisante pour contrôler l'erreur de généralisation. De plus, la régularisation dans les réseaux de neurones profonds joue beaucoup plus le rôle de l'optimisation de la dernière erreur sur l'ensemble de test du modèle.	
-
-
-\subsection{Expressivité d'un échantillon fini}
-Il  a été montré aussi que l'utilisation d'un réseau de neurones avec deux couches cachées et la fonction d'activation ReLU avec $p=2n+d$ paramètres peut apprendre n'importe quel échantillon de taille $n$ en $d$ dimensions.
-
-\subsection{Rôle d'une régularisation implicite}
-Un modèle qui peut bien apprendre les données d'apprentissage n'est pas forcément capable de bien généraliser. Les auteurs montrent que même les méthodes basées sur la fonction gaussienne noyau peuvent bien généraliser sans régularisation sur les petits ensembles. Toutefois, cela n'explique pas pourquoi certaines architectures généralisent mieux que d'autres.
-
-\section{Travaux connexes}
-Plusieurs travaux ont été fait dans le passé pour étudier l'expressivité d'un réseau de neurones et parmi les conclusions marquantes on cite:
-\begin{itemize}
-	\item La stabilité d'un algorithme d'apprentissage est indépendante de l'étiquetage de l'ensemble d'apprentissage.
-	\item Même les perceptrons de deux couches cachées seulement ont une expressivité universelle sur les échantillons de taille finie.
-	\item La taille d'un réseau de neurone n'est pas l'acteur principal de son contrôle de capacité.
+	\item les réseaux de neurones apprennent facilement des labels aléatoires. 
+	\item La régularisation “explicite” peut améliorer la généralisation du réseau de neurones, mais elle n’est pas nécessaire ni suffisante pour contrôler l’erreur de généralisation. 
+	\item Ils complétaient leur approche expérimentale par une construction théorique montrant qu'il existe un réseau de neurones à 2 couches avec des activations ReLU et 2n+d poids qui peut représenter n’importe quelle fonction sur un échantillon de données de taille n et de dimension d. 
 \end{itemize}
 
-\section{Expérimentations}
-Tous les tests ont été faits sur les deux bases de données $CIFAR\_10$ et $ImageNet$.
+Et en faisant appel aux modèles linéaires, les auteurs analysaient comment la Descente de Gradient Stochastique (SGD) agit comme une régularisation « implicite » et suggéraient qu’une investigation plus approfondie devrait être faite pour comprendre les propriétés des modèles qui utilisent la SGD dans leur apprentissage.
 
-\section{Conclusion}
-Les expérimentations présentées dans cet article mettent l'accent sur l'importance de comprendre la notion de capacité effective des modèles de réseaux de neurones, qui sont facilement capable de mémoriser tout l'ensemble d'apprentissage. Pour résumer, les raisons pour lesquelles l'optimisation est empiriquement facile doivent être différentes de la vraie cause de généralisation. C'est pour cela qu'il est nécessaire de comprendre les vraies notions qui se cachent derrière la généralisation pour pouvoir bien comprendre l'apprentissage profond.
+\vspace{-2em}
 
+\section{Analyse}
+\vspace{-1em}
+
+Selon la Théorie d’Apprentissage Statistique, un modèle généralise bien s’il n’a pas la capacité d’overfitter des données aléatoires de même taille que les données d’apprentissage réelles. 
+Dans cet article, les auteurs discutaient de la capacité des réseaux de neurones et des méthodes de régularisation les plus utilisées en Machine Learning et trouvaient que la théorie classique d’apprentissage statistique ainsi que les stratégies de régularisation ne peuvent pas expliquer la remarquable capacité des réseaux de neurones à bien se généraliser. 
+
+Cet article présente un ensemble d’expérimentations, dont \textbf{la randomisation des labels} et \textbf{l’ajout de bruit}, qui ont mis en relief le pouvoir énorme des réseaux de neurones larges. Encore, ces mêmes modèles arrivent à généraliser même quand on supprime toute forme de \textbf{régularisation explicite} ou \textbf{implicite}. Ces observations sont utilisées pour montrer l’incapacité de la théorie classique (dimension de VC, complexité de Rademacher, stabilité uniforme) à expliquer le pouvoir de généralisation.  
+
+Comme l’ont mentionné les auteurs, dès qu’une famille de modèles arrive à mémoriser toutes les données d’apprentissage, la théorie classique ne permet pas de percevoir le comportement de ces modèles en termes de généralisation, ce qui ne laisse que le choix d’expérimentation et d’étude empirique.
+
+Bien que ce travail ne propose pas assez d’explications pour ces capacités de généralisation, il oblige le lecteur à penser au problème de généralisation d’un nouvel angle, différemment de la façon traditionnelle dont on le comprend. 
+\vspace{-1em}
+\section{Critiques}
+\vspace{-1em}
+D'abord, l’article montre qu’une bonne généralisation n’est pas souhaitée pour un problème à labels aléatoires. Ceci est certainement correct, mais nous pensons que c’est inintéressant en pratique, du moment où on n'a pas intérêt à travailler avec des étiquettes aléatoires, pour une finalité de classification par exemple.  
+Ensuite, bien que l’article incite à la réflexion, à la lecture et à la discussion, on n’a cependant pas très bien clarifié de quelles “approches traditionnelles” parlait-on et pourquoi est-il si surprenant qu’elles échouent à expliquer la performance des réseaux de neurones. Les auteurs expriment leur surprise à propos de certaines capacités des réseaux de neurones, mais ils ne donnaient pas de références ni d’arguments qui expliquent pourquoi devrait-on être surpris. 
+On s'est surpris aussi du fait que la SGD arrive à optimiser les poids pour fitter les étiquettes aléatoires sans aucun changement d'hyper paramètres. On sait tous que les réseaux de neurones larges ont suffisamment de paramètres pour mémoriser les étiquettes aléatoires, donc ce n’est pas si évident que ce soit surprenant. 
+Enfin, il aurait été mieux de présenter des explications alternatives au phénomène de généralisation, au lieu de seulement remettre en question  les approches traditionnelles.
+\vspace{-1em}
+\section{Conclusion} 
+\vspace{-1em}
+Les expérimentations présentées dans cet article mettent l’accent sur l’importance de comprendre la capacité effective des réseaux de neurones, qui sont capables de mémoriser facilement tout l’ensemble d’apprentissage, même lorsqu'on casse le lien entre les données et les étiquettes. Une optimisation empirique facile n'est à priori pas la vraie raison de généralisation. C’est pour cela qu’il est nécessaire de comprendre les vraies notions qui se cachent derrière la généralisation pour pouvoir bien comprendre l’apprentissage profond.
+\vspace{-1em}
 \section*{Références}
+\vspace{-1em}
 [1] Zhang, C., Bengio, S., Hardt, M., Recht, B. and Vinyals, O., 2016. Understanding deep learning requires rethinking generalization. arXiv preprint arXiv:1611.03530.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
